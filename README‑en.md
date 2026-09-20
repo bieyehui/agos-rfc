@@ -176,317 +176,173 @@ What enterprises need is not another large model, not IM, not an RPA tool; rathe
 ```text
 
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│                         Terminal \& Channel Layer                          │
-
-│   ┌──────────────┐          ┌──────────────────────────────────────┐   │
-
-│   │ AGOS Client   │          │ External Channels, Platforms \& Endpoints │
-
-│   │ PC / Mobile   │          │ WeCom/Feishu/DingTalk / 3rd-party Apps / Self-media / Devices │
-
-│   └──────┬───────┘          └──────────────────┬───────────────────┘   │
-
-└─────────┼──────────────────────────────────────┼───────────────────────┘
-
-│                                      │
-
-▼                                      ▼
-
+│ Terminal & Channel Layer                                                │
+│  ┌──────────────────────┐          ┌────────────────────────────────┐   │
+│  │ AGOS Client           │          │ External Channels, Platforms   │   │
+│  │ PC / Mobile           │          │ & Endpoints                    │   │
+│  │                       │          │ WeCom / Feishu / DingTalk /    │   │
+│  │                       │          │ Third-party Apps / Self-media /│   │
+│  │                       │          │ Devices                        │   │
+│  └──────────┬────────────┘          └───────────────┬────────────────┘   │
+└─────────────┼───────────────────────────────────────┼────────────────────┘
+              │                                       │
+              └───────────────────┬───────────────────┘
+                                  ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│                         Access Gateway Layer (including PEP - Policy Enforcement Point) │
-
-│                                                                         │
-
-│   ┌────────┐   ┌─────────┐   ┌────────────┐   ┌────────┐   ┌────────┐  │
-
-│   │ IM GW  │   │API/SDK  │   │Webhook GW  │   │MCP GW  │   │Event Bus│  │
-
-│   │        │   │         │   │            │   │(Protocol Adaptation)│   │        │  │
-
-│   └───┬────┘   └────┬────┘   └─────┬──────┘   └───┬────┘   └───┬────┘  │
-
-│       │             │              │              │            │       │
-
-│       └─────────────┴──────┬───────┴──────────────┴────────────┘       │
-
-│                            │  ⬇ PEP Interception Point (Policy Enforcement Point) │
-
-│                            │  Executes PDP decision results: deny/allow/rate-limit │
-
-└────────────────────────────┼────────────────────────────────────────────┘
-
-│
-
-▼
-
+│ Access Gateway Layer (incl. PEP - Policy Enforcement Point)             │
+│  ┌────────┐ ┌─────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐   │
+│  │ IM     │ │ API/SDK │ │ Webhook    │ │ MCP        │ │ Event Bus  │   │
+│  │ Gateway│ │         │ │ Gateway    │ │ Gateway    │ │            │   │
+│  │        │ │         │ │            │ │ (Protocol  │ │            │   │
+│  │        │ │         │ │            │ │ Adaptation)│ │            │   │
+│  └───┬────┘ └────┬────┘ └──────┬─────┘ └──────┬─────┘ └──────┬─────┘   │
+│      └───────────┴─────────────┴──────────────┴──────────────┘         │
+│                                  │                                      │
+│                     ⬇ PEP Interception Point (Policy Enforcement Point) │
+│         Execute PDP decisions: deny / allow / rate-limit                │
+└──────────────────────────────────┼──────────────────────────────────────┘
+                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│                         Governance Core Layer (Policy Control Center)      │
-
-│                                                                         │
-
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-
-│   │  PAP (Policy Administration Point)                                 │   │
-
-│   │  ┌────────────┐ ┌──────────────────────┐ ┌─────────────────────┐  │   │
-
-│   │  │ Whitelist Mgmt │ │ Policy Rule Config Center │ │ Tenant Quota/Cost Budget Mgmt │  │   │
-
-│   │  └────────────┘ └──────────────────────┘ └─────────────────────┘  │   │
-
-│   └───────────────────────────┬─────────────────────────────────────┘   │
-
-│                               ▼ Policy Distribution                     │
-
-│   ┌─────────────────────────────────────────────────────────────────┐   │
-
-│   │  PDP (Policy Decision Point)                                       │   │
-
-│   │  ┌────────────────┐ ┌──────────────┐ ┌─────────────────────────┐  │   │
-
-│   │  │ Operation Tiering L0\~L4 │ │ Quota/Frequency/Cost │ │ Risk Circuit Breaker \& Sandbox Isolation │  │   │
-
-│   │  └────────────────┘ └──────────────┘ └─────────────────────────┘  │   │
-
-│   │  ┌────────────────────────────────────────────────────────────┐   │   │
-
-│   │  │ Approval Workflow Engine (L3/L4 → Human Approval)           │   │   │
-
-│   │  └────────────────────────────────────────────────────────────┘   │   │
-
-│   └───────────────────────────┬─────────────────────────────────────┘   │
-
-│                               │ Decision Result → Return to PEP for Execution │
-
-└───────────────────────────────┼─────────────────────────────────────────┘
-
-│
-
-▼
-
+│ Governance Core Layer (Policy Control Center)                           │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ PAP (Policy Administration Point)                                 │  │
+│  │ ┌────────────┐ ┌──────────────────────┐ ┌───────────────────────┐ │  │
+│  │ │ Allowlist  │ │ Policy Rule          │ │ Tenant Quota / Cost   │ │  │
+│  │ │ Management │ │ Configuration Center │ │ Budget Management     │ │  │
+│  │ └────────────┘ └──────────────────────┘ └───────────────────────┘ │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  ▼ Policy distribution                 │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ PDP (Policy Decision Point)                                       │  │
+│  │ ┌────────────────┐ ┌──────────────┐ ┌───────────────────────────┐ │  │
+│  │ │ Operation      │ │ Quota /      │ │ Risk Circuit Breaking &   │ │  │
+│  │ │ Classification │ │ Frequency /  │ │ Sandbox Isolation         │ │  │
+│  │ │ L0~L4          │ │ Cost         │ │                           │ │  │
+│  │ └────────────────┘ └──────────────┘ └───────────────────────────┘ │  │
+│  │ ┌───────────────────────────────────────────────────────────────┐ │  │
+│  │ │ Approval Workflow Engine (L3/L4 → Manual Approval)            │ │  │
+│  │ └───────────────────────────────────────────────────────────────┘ │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  │ Decision result → returned to PEP   │
+└──────────────────────────────────┼──────────────────────────────────────┘
+                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│                         Agent CEO Layer (Brain · Task Scheduling Center)  │
-
+│ Agent CEO Layer (Brain · Task Scheduling Center)                        │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ ① Perception Layer                                                │  │
+│  │ Receive requests approved by governance layer, understand intent, │  │
+│  │ extract context                                                   │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  ▼                                      │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ ② Memory Layer                                                    │  │
+│  │ Read/write historical context (backed by vector DB / graph DB /   │  │
+│  │ relational storage)                                               │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  ▼                                      │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ ③ Decision Layer  ◀══ 🔐 Secondary Authentication Gateway ══▶     │  │
+│  │ Task planning & tool routing                                      │  │
+│  │ Before CEO decision → call governance PDP for "Agent Identity      │  │
+│  │ Secondary Authentication"                                         │  │
+│  │ Verify: Agent ID validity / current operation authorization /      │  │
+│  │ risk level re-assessment                                          │  │
+│  │ If failed → block / degrade / escalate to human                   │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  ▼                                      │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ ④ Interaction Layer                                               │  │
+│  │ Multi-turn dialogue & state sync with users/other Agents          │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  ▼                                      │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ ⑤ Execution Layer                                                 │  │
+│  │ Invoke specific capabilities of Tool & Connector Layer,           │  │
+│  │ orchestrate execution flow                                        │  │
+│  └───────────────────────────────┬───────────────────────────────────┘  │
+│                                  ▼                                      │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ ⑥ Self-Evolution Layer (Closed-loop Feedback)                     │  │
+│  │ Execution result → effect evaluation → policy tuning / model      │  │
+│  │ fine-tuning / tool routing optimization → feedback to Perception  │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
 │                                                                         │
-
-│   ┌──────────────────────────────────────────────────────────────────┐  │
-
-│   │  ① Perception Layer                                                │  │
-
-│   │  Receives requests approved by governance layer, understands intent, extracts context │  │
-
-│   └──────────────────────────┬───────────────────────────────────────┘  │
-
-│                              │                                           │
-
-│                              ▼                                           │
-
-│   ┌──────────────────────────────────────────────────────────────────┐  │
-
-│   │  ② Memory Layer                                                    │  │
-
-│   │  Reads/writes historical context (relying on underlying vector DB/graph DB/relational storage) │  │
-
-│   └──────────────────────────┬───────────────────────────────────────┘  │
-
-│                              │                                           │
-
-│                              ▼                                           │
-
-│   ┌──────────────────────────────────────────────────────────────────┐  │
-
-│   │  ③ Decision Layer  ◀══ 🔐 Secondary Authentication Gateway ══▶    │  │
-
-│   │  Task planning and tool routing                                   │  │
-
-│   │  ┌──────────────────────────────────────────────────────┐         │  │
-
-│   │  │ Before CEO decision → call governance layer PDP for "Agent Identity Secondary Authentication" │         │  │
-
-│   │  │ Verify: Agent ID validity / current operation authorization / risk level re-assessment │         │  │
-
-│   │  │ If not passed → intercept/degrade/human handover      │         │  │
-
-│   │  └──────────────────────────────────────────────────────┘         │  │
-
-│   └──────────────────────────┬───────────────────────────────────────┘  │
-
-│                              │                                           │
-
-│                              ▼                                           │
-
-│   ┌──────────────────────────────────────────────────────────────────┐  │
-
-│   │  ④ Interaction Layer                                               │  │
-
-│   │  Multi-turn dialogue with users/other Agents, state synchronization │  │
-
-│   └──────────────────────────┬───────────────────────────────────────┘  │
-
-│                              │                                           │
-
-│                              ▼                                           │
-
-│   ┌──────────────────────────────────────────────────────────────────┐  │
-
-│   │  ⑤ Execution Layer                                                 │  │
-
-│   │  Invokes specific capabilities of tool connector layer, orchestrates execution flow │  │
-
-│   └──────────────────────────┬───────────────────────────────────────┘  │
-
-│                              │                                           │
-
-│                              ▼                                           │
-
-│   ┌──────────────────────────────────────────────────────────────────┐  │
-
-│   │  ⑥ Self-Evolution Layer (Closed-loop Feedback)                     │  │
-
-│   │  Execution results → effect evaluation → policy tuning/model fine-tuning/tool routing optimization → feedback to perception │  │
-
-│   └──────────────────────────────────────────────────────────────────┘  │
-
-│                                                                         │
-
-│   ◄═══════════════════ Agent CEO Full Closed Loop ═══════════════════►  │
-
-└───────────────────────────────┬─────────────────────────────────────────┘
-
-│ Execution Invocation
-
-▼
-
+│  ◄═══════════════════ Agent CEO Full Closed Loop ═══════════════════►   │
+└──────────────────────────────────┬──────────────────────────────────────┘
+                                   │ Execution call
+                                   ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│                         Tools \& Connector Layer                           │
-
-│                                                                         │
-
-│   ┌──────────┐ ┌──────────────┐ ┌─────────────┐ ┌─────────────┐        │
-
-│   │Device/MDM │ │Enterprise IM Open Platform │ │OA/ERP/CRM   │ │Life Service MCP │        │
-
-│   └──────────┘ └──────────────┘ └─────────────┘ └─────────────┘        │
-
-│   ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────────┐   │
-
-│   │Search/Media Gen MCP │ │Local Model/Knowledge Base │ │Self-media Platform API │   │
-
-│   └──────────────────┘ └──────────────────┘ └──────────────────────┘   │
-
-│                                                                         │
-
-│   Note: MCP in this layer is the "capability provider," distinct from the "MCP Protocol Access Gateway" in the access gateway layer │
-
+│ Tool & Connector Layer                                                  │
+│  ┌──────────┐ ┌──────────────┐ ┌─────────────┐ ┌─────────────┐         │
+│  │ Device / │ │ Enterprise   │ │ OA/ERP/CRM  │ │ Life        │         │
+│  │ MDM      │ │ IM Open      │ │             │ │ Services    │         │
+│  │          │ │ Platform     │ │             │ │ MCP         │         │
+│  └──────────┘ └──────────────┘ └─────────────┘ └─────────────┘         │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────────┐    │
+│  │ Search / Media   │ │ Local Models /   │ │ Self-media Platform  │    │
+│  │ Generation MCP   │ │ Knowledge Base   │ │ API                  │    │
+│  └──────────────────┘ └──────────────────┘ └──────────────────────┘    │
+│  Note: MCP in this layer is a "capability provider", distinct from     │
+│  the "MCP protocol access gateway" in the Access Gateway Layer.         │
+└──────────────────────────────────┬──────────────────────────────────────┘
+                                   ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Infrastructure & Storage Layer                                          │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐            │
+│  │ Vector DB     │ │ Graph DB     │ │ Relational / Doc DB  │            │
+│  │ semantic      │ │ relationship │ │ config / logs /      │            │
+│  │ retrieval /   │ │ reasoning    │ │ metadata             │            │
+│  │ memory        │ │              │ │                      │            │
+│  └──────────────┘ └──────────────┘ └──────────────────────┘            │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐            │
+│  │ Message Queue │ │ Cache Layer  │ │ Model Routing &      │            │
+│  │ async tasks / │ │ (Redis)      │ │ Version Management   │            │
+│  │ events        │ │ hot data     │ │ multi-model switch / │            │
+│  │               │ │              │ │ fallback             │            │
+│  └──────────────┘ └──────────────┘ └──────────────────────┘            │
 └─────────────────────────────────────────────────────────────────────────┘
 
-│
-
-▼
+Three Cross-Cutting Layers (spanning all layers)
 
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│                         Infrastructure \& Storage Layer                    │
-
-│                                                                         │
-
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐         │
-
-│   │ Vector Database │  │ Graph Database │  │ Relational/Document Database │         │
-
-│   │ (Semantic Retrieval/Memory)│  │ (Relational Reasoning) │  │ (Config/Logs/Metadata) │         │
-
-│   └──────────────┘  └──────────────┘  └──────────────────────┘         │
-
-│                                                                         │
-
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐         │
-
-│   │ Message Queue │  │ Cache (Redis) │  │ Model Routing \& Version Mgmt │         │
-
-│   │ (Async Tasks/Events)│  │ (Hot Data)    │  │ (Multi-model Switch/Degrade) │         │
-
-│   └──────────────┘  └──────────────┘  └──────────────────────┘         │
-
+│ Cross-Cutting Layer 1: Information Provenance & Audit Layer             │
+│ Full-chain Audit & Provenance (Cross-Cutting)                           │
+│ Terminal request → Gateway log → Governance decision log →              │
+│ CEO decision log → Execution result                                     │
+│                  └──────────────┬──────────────┘                        │
+│                                 ▼                                       │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │ Information Provenance Engine                                     │  │
+│  │ · End-to-end TraceID linkage                                      │  │
+│  │ · External retrieval / internal knowledge base / model content    │  │
+│  │   provenance                                                      │  │
+│  │ · Tamper-proof audit log storage                                  │  │
+│  │ · Compliance report generation                                    │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────┘
 
-
-
-\## Three Cross-Cutting Layers (Spanning All Layers)
-
-Cross-Cutting Layer 1: Information Traceability \& Audit Layer
-
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│  Full-Link Audit \& Traceability (Cross-Cutting)                           │
-
-│                                                                         │
-
-│   Terminal Request ──→ Gateway Log ──→ Governance Decision Log ──→ CEO Decision Log ──→ Execution Result │
-
-│      │              │              │              │              │       │
-
-│      └──────────────┴──────┬───────┴──────────────┴──────────────┘       │
-
-│                            ▼                                              │
-
-│   ┌─────────────────────────────────────────────────────────────────┐    │
-
-│   │  Information Traceability Engine                                  │    │
-
-│   │  · Full-link TraceID chaining  · External search/internal KB/model content traceability │    │
-
-│   │  · Tamper-proof audit log storage  · Compliance report generation │    │
-
-│   └─────────────────────────────────────────────────────────────────┘    │
-
+│ Cross-Cutting Layer 2: Security Capability Layer                        │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │
+│  │ Transport /  │ │ Key Mgmt KMS │ │ Sensitive    │ │ Model        │   │
+│  │ Storage      │ │ rotation /   │ │ Data Masking │ │ Security     │   │
+│  │ Encryption   │ │ audit        │ │ PII /        │ │ Prompt       │   │
+│  │ TLS / SM     │ │              │ │ confidential │ │ injection /  │   │
+│  │              │ │              │ │              │ │ jailbreak /  │   │
+│  │              │ │              │ │              │ │ poisoning    │   │
+│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │
 └─────────────────────────────────────────────────────────────────────────┘
 
-Cross-Cutting Layer 2: Security Capability Layer
-
 ┌─────────────────────────────────────────────────────────────────────────┐
-
-│  Security Capabilities (Cross-Cutting)                                     │
-
-│                                                                         │
-
-│   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │
-
-│   │ Transport/Storage Encryption │ │ Key Mgmt KMS │ │ Sensitive Data Masking │ │ Model Security │  │
-
-│   │ (TLS/National Crypto)    │ │ (Rotation/Audit)   │ │ (PII/Confidential)   │ │ (Prompt Injection │  │
-
-│   └──────────────┘ └──────────────┘ └──────────────┘ │  Jailbreak/Poisoning)    │  │
-
-│                                                      └──────────────┘  │
-
-└─────────────────────────────────────────────────────────────────────────┘
-
-Cross-Cutting Layer 3: Observability Layer
-
-┌─────────────────────────────────────────────────────────────────────────┐
-
-│  Observability (Cross-Cutting)                                            │
-
-│                                                                         │
-
-│   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │
-
-│   │ Metrics Collection │ │ Distributed Tracing │ │ Log Aggregation │ │ Alert Engine │  │
-
-│   │ (Metrics)     │ │ (Tracing)    │ │ (Logging)    │ │ (Threshold/Anomaly) │  │
-
-│   └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘  │
-
-│                                                                         │
-
-│   Coverage: API response latency · Token consumption · Model inference time · Tool call success rate · Circuit breaker count │
-
+│ Cross-Cutting Layer 3: Observability Layer                              │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐   │
+│  │ Metrics      │ │ Distributed  │ │ Log          │ │ Alerting     │   │
+│  │ Collection   │ │ Tracing      │ │ Aggregation  │ │ Engine       │   │
+│  │              │ │              │ │              │ │ threshold /  │   │
+│  │              │ │              │ │              │ │ anomaly      │   │
+│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘   │
+│ Coverage: API response latency · Token consumption · Model inference    │
+│ latency · Tool call success rate · Circuit breaker count                │
 └─────────────────────────────────────────────────────────────────────────┘
 
 ```
