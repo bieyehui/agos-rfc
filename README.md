@@ -1,3 +1,4 @@
+> Read this document in English: [README‑en.md](./README‑en.md)
 # AGOS（Agent Governance OS）
 企业级 AI 代理治理操作系统架构构想
 
