@@ -302,7 +302,9 @@ What enterprises need is not another large model, not IM, not an RPA tool; rathe
 │  └──────────────┘ └──────────────┘ └──────────────────────┘            │
 └─────────────────────────────────────────────────────────────────────────┘
 
-Three Cross-Cutting Layers (spanning all layers)
+================================================================================
+        Three Cross-Cutting Layers (spanning all layers)
+================================================================================
 
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ Cross-Cutting Layer 1: Information Provenance & Audit Layer             │
